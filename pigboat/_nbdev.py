@@ -8,7 +8,9 @@ index = {"TypeDispatch2": "00_core.ipynb",
          "reduce_lbls": "00_core.ipynb",
          "compose_tfms2": "00_core.ipynb",
          "Pipeline2": "00_core.ipynb",
-         "create_categories": "00_core.ipynb"}
+         "register_categories": "00_core.ipynb",
+         "ABSTAIN": "00_core.ipynb",
+         "categorize": "00_core.ipynb"}
 
 modules = ["core.py"]
 
