@@ -44,8 +44,7 @@ class Pipeline2(Pipeline):
     def __init__(self, funcs=None, lfs=None, **kwargs):
         super().__init__(funcs=funcs, **kwargs)
         self.lfs = lfs
-    def __call__(self, o): return compose_tfms2(o, tfms=self.fs, lfs=self.lfs,
-                                                split_idx=self.split_idx)
+    def __call__(self, o): return compose_tfms2(o, tfms=self.fs, lfs=self.lfs, split_idx=self.split_idx)
 
 # Cell
 ABSTAIN = 'abstain'
@@ -54,3 +53,4 @@ categorize = Categorize(vocab=[ABSTAIN])
 def register_categories(*args):
     global categorize
     categorize = Categorize(vocab=itertools.chain(categorize.vocab,args))
+    return categorize.vocab
