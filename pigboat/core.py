@@ -18,29 +18,30 @@ class DispatchReg2(DispatchReg):
 typedispatch2 = DispatchReg2()
 
 # Cell
-def reduce_lbls(lbls):
+def reduce_lbls(lbls, abstain):
     lbls = lbls.filter(partial(equals, None), negate=True) # Remove all Nones
     if len(lbls)>1: raise ValueError # TODO: Should figure out this case
-    return lbls[0] if len(lbls)==1 else 'ABSTAIN'
+    return lbls[0] if len(lbls)==1 else abstain
 
 # Cell
-def compose_tfms2(x, tfms, lfs, is_enc=True, reverse=False, **kwargs):
+def compose_tfms2(x, tfms, lfs, cats, is_enc=True, reverse=False, **kwargs):
     "Apply all `func_nm` attribute of `tfms` on `x`, maybe in `reverse` order"
     if reverse: tfms = reversed(tfms)
-    lbls = defaultdict(L)
+    lbls = L(L() for _ in range_of(lfs))
     for i,lf in enumerate(lfs): lbls[i].append(lf(x))
     for f in tfms:
         if not is_enc: f = f.decode
         x = f(x, **kwargs)
         for i,lf in enumerate(lfs): lbls[i].append(lf(x))
     # TODO: LF can be called twice (if types repeat)
-    lbls = {k:reduce_lbls(v) for k,v in lbls.items()} # This is how you reduce it
+    lbls = [reduce_lbls(v, cats.abstain) for v in lbls]
     return lbls
 
 # Cell
 @delegates(Pipeline.__init__)
 class Pipeline2(Pipeline):
-    def __init__(self, funcs=None, lfs=None, **kwargs):
+    def __init__(self, funcs=None, lfs=None, categories=None, **kwargs):
         super().__init__(funcs=funcs, **kwargs)
-        self.lfs = lfs
-    def __call__(self, o): return compose_tfms2(o, tfms=self.fs, lfs=self.lfs, split_idx=self.split_idx)
+        self.lfs,self.cats = lfs,categories
+    def __call__(self, o): return compose_tfms2(o, tfms=self.fs, lfs=self.lfs,
+                                                cats=self.cats, split_idx=self.split_idx)
