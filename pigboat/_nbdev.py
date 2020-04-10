@@ -2,20 +2,25 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"TypeDispatch2": "00_core.ipynb",
+index = {"TaskLabels": "00_core.ipynb",
+         "TypeDispatch2": "00_core.ipynb",
          "DispatchReg2": "00_core.ipynb",
          "typedispatch2": "00_core.ipynb",
          "reduce_lbls": "00_core.ipynb",
-         "TaskLabels": "00_core.ipynb",
          "compose_tfms2": "00_core.ipynb",
          "Pipeline2": "00_core.ipynb",
          "register_categories": "00_core.ipynb",
          "ABSTAIN": "00_core.ipynb",
          "categorize": "00_core.ipynb",
-         "MajorityLabelVoter": "03_model.majority_label_voter.ipynb"}
+         "MajorityLabelVoter": "03_model.majority_label_voter.ipynb",
+         "Tokens": "05_text.core.ipynb",
+         "Tokenizer.__call__": "05_text.core.ipynb",
+         "WordLabeller": "06_text.labellers.ipynb"}
 
 modules = ["core.py",
-           "models/majority_label_voter.py"]
+           "models/majority_label_voter.py",
+           "text/core.py",
+           "text/labellers.py"]
 
 doc_url = "https://lgvaz.github.io/pigboat/"
 
