@@ -13,4 +13,4 @@ class MajorityLabelVoter(Module):
             row = row[row!=0]
             if row.numel() == 0: preds.append(0)
             else:                preds.append(row.mode().values.item())
-        return tensor(preds)
+        return tensor(preds).to(x.device)
