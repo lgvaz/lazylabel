@@ -11,9 +11,11 @@ index = {"TypeDispatch2": "00_core.ipynb",
          "Pipeline2": "00_core.ipynb",
          "register_categories": "00_core.ipynb",
          "ABSTAIN": "00_core.ipynb",
-         "categorize": "00_core.ipynb"}
+         "categorize": "00_core.ipynb",
+         "MajorityLabelVoter": "03_model.majority_label_voter.ipynb"}
 
-modules = ["core.py"]
+modules = ["core.py",
+           "models/majority_label_voter.py"]
 
 doc_url = "https://lgvaz.github.io/pigboat/"
 

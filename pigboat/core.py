@@ -25,7 +25,9 @@ def reduce_lbls(lbls):
     return categorize(lbls[0] if len(lbls)==1 else ABSTAIN)
 
 # Cell
-class TaskLabels(TensorBase): pass
+# TODO: Implement show
+class TaskLabels(TensorBase):
+    def show(self, ctx=None, **kwargs): return str([categorize.decode(o) for o in self])
 
 # Cell
 def compose_tfms2(x, tfms, lfs, is_enc=True, reverse=False, **kwargs):
