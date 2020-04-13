@@ -47,11 +47,13 @@ def __init__(self:Pipeline, *args, **kwargs):
 @typedispatch
 def subscribe(tfm):
     old_call = tfm.__call__
+    tfm.broadcast = True
     def _inner(f):
         def _call(self, x, **kwargs):
             res = old_call(self, x, **kwargs)
-            res = _maintain_labels(x, res)
-            if res is not x: res = f(res)
+            if self.broadcast:
+                res = _maintain_labels(x, res)
+                if res is not x: res = f(res)
             return res
         tfm.__call__ = _call
         return f
