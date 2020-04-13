@@ -4,6 +4,7 @@ __all__ = ['CategorizeTaskLabels']
 
 # Cell
 from fastai2.basics import *
+from ..basics import *
 
 # Cell
 class CategorizeTaskLabels(MultiCategorize):
