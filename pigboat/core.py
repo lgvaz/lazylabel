@@ -45,17 +45,17 @@ def __init__(self:Pipeline, *args, **kwargs):
 # Cell
 # TODO: Can confirm function was called without doing "res is not x"?
 @typedispatch
-def subscribe(tfm):
-    old_call = tfm.__call__
+def subscribe(tfm:Transform):
+    old_call = tfm._do_call
     tfm.broadcast = True
     def _inner(f):
-        def _call(self, x, **kwargs):
-            res = old_call(self, x, **kwargs)
+        def _call(fn, x, **kwargs):
+            res = old_call(fn, x, **kwargs)
             res = _maintain_labels(x, res)
-            if self.broadcast:
+            if tfm.broadcast:
                 if res is not x: res = f(res)
             return res
-        tfm.__call__ = _call
+        tfm._do_call = _call
         return f
     return _inner
 
