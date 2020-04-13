@@ -51,13 +51,18 @@ def subscribe(tfm):
     def _inner(f):
         def _call(self, x, **kwargs):
             res = old_call(self, x, **kwargs)
+            res = _maintain_labels(x, res)
             if self.broadcast:
-                res = _maintain_labels(x, res)
                 if res is not x: res = f(res)
             return res
         tfm.__call__ = _call
         return f
     return _inner
+
+# Cell
+@patch
+def broadcast(self:Pipeline, v):
+    for f in self.fs: f.broadcast = v
 
 # Cell
 class Labeller:

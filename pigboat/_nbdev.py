@@ -5,6 +5,7 @@ __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 index = {"AttrProxy": "00_core.ipynb",
          "maintain_labels": "00_core.ipynb",
          "Pipeline.__init__": "00_core.ipynb",
+         "Pipeline.broadcast": "00_core.ipynb",
          "Labeller": "00_core.ipynb",
          "CategorizeTaskLabels": "01_data.transforms.ipynb",
          "MajorityLabelVoter": "03_model.majority_label_voter.ipynb",
