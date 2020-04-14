@@ -49,7 +49,6 @@ def _add_attr(obj, name, value):
     try:
         setattr(obj, name, getattr(obj,'labels',value))
         return obj
-    # It's not possible to set attributes on builtin types, so we wrap with a proxy
     except AttributeError: return _add_attr(_get_proxy(obj), name, value)
 
 # Cell
