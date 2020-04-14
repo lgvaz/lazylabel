@@ -6,6 +6,35 @@ __all__ = ['AttrProxy', 'maintain_labels', 'Labeller']
 from fastai2.basics import *
 
 # Cell
+_old_tfmdlists_init = TfmdLists.__init__
+@patch
+def __init__(self:TfmdLists, items, tfms, **kwargs):
+    _old_tfmdlists_init(self, items, tfms, **kwargs)
+    self.cached = False
+
+# Cell
+_old_tfmdlists_new = TfmdLists._new
+@patch
+def _new(self:TfmdLists, items, **kwargs):
+    tls = _old_tfmdlists_new(self, items, )
+    tls.cached = self.cached
+    return tls
+
+# Cell
+@patch
+def cache(self:TfmdLists, tfms=None, pbar=True):
+    tfms = Pipeline(tfms)
+    self.items = [tfms(o) for o in (progress_bar(self) if pbar else self)]
+    self.cached = True
+
+# Cell
+_old_getitem = TfmdLists.__getitem__
+@patch
+def __getitem__(self:TfmdLists, idx):
+    if self.cached: return super(TfmdLists, self).__getitem__(idx)
+    else:      return _old_getitem(self, idx)
+
+# Cell
 class AttrProxy(GetAttr):
     def __init__(self, default): self.default = default
 
@@ -36,10 +65,10 @@ def maintain_labels(f):
 
 # Cell
 # figure out delegates
-_old_init = Pipeline.__init__
+_old_pipe_init = Pipeline.__init__
 @patch
 def __init__(self:Pipeline, *args, **kwargs):
-    _old_init(self, *args, **kwargs)
+    _old_pipe_init(self, *args, **kwargs)
     for o in self.fs: o._do_call = maintain_labels(o._do_call)
 
 # Cell
