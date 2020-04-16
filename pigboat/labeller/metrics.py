@@ -22,14 +22,14 @@ class ValidLabelMetric(LabelMetric):
 
 # Cell
 class Coverage(LabelMetric):
-    def reset(self): self.total,self.cov = 0,0
+    def reset(self): self.total,self.count = 0,0
     def accumulate(self, xb):
         #TODO: Hardcoded 0 for abstain, can be wrong
         self.total += find_bs(xb)
-        bcov = (xb!=0).sum(axis=0)
-        self.cov += bcov
+        bcount = (xb!=0).sum(axis=0)
+        self.count += bcount
     @property
-    def value(self): return (self.cov.float()/self.total).tolist()
+    def value(self): return (self.count.float()/self.total).tolist()
 
 # Cell
 class Polarity(LabelMetric):
