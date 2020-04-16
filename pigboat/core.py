@@ -94,6 +94,8 @@ class subscribe:
         self.tfm._do_call = _call
         return f
 
+    def cancel(self): self.tfm._do_call = MethodType(Transform._do_call, self.tfm)
+
 # Cell
 # @patch
 # def broadcast(self:Pipeline, v):

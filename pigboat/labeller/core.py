@@ -26,6 +26,11 @@ class Labeller:
             return sub(self._add_label(f))
         return _inner
 
+    def reset(self):
+        for sub in self.subs: sub.cancel()
+        self.subs.clear()
+        self.func_order.clear()
+
     def listen(self, v):
         for sub in self.subs: sub.listen = v
 
