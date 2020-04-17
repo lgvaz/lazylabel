@@ -19,12 +19,17 @@ class Labeller:
         self.subs = L()
 
     def __call__(self, tfm):
-        def _inner(f):
-            self.func_order.clear()
-            sub = subscribe(tfm, self.func_order)
-            self.subs.append(sub)
-            return sub(self._add_label(f))
+        def _inner(f): return self.register_func(tfm, f)
         return _inner
+
+    def register_func(self, tfm, f):
+        self.func_order.clear()
+        sub = subscribe(tfm, self.func_order)
+        self.subs.append(sub)
+        return sub(self._add_label(f))
+
+    def register_funcs(self, tfm, fs):
+        for f in L(fs): self.register_func(tfm, f)
 
     def reset(self):
         for sub in self.subs: sub.cancel()
