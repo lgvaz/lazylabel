@@ -82,14 +82,9 @@ defaults.labeller_metrics = [Coverage, Polarity, LabelAccuracy, CountCorrect, Co
 # Cell
 _old_labeller_init = Labeller.__init__
 @patch
-def __init__(self:Labeller, abstain='abstain', metrics=None):
-    _old_labeller_init(self, abstain=abstain)
+def __init__(self:Labeller, vocab, metrics=None):
+    _old_labeller_init(self, vocab)
     self.metrics = L(instantiate(o) for o in L(metrics)+L(defaults.labeller_metrics))
-
-# Cell
-def _split(dl, b):
-    i = getattr(dl, 'n_inp', 1 if len(b)==1 else len(b)-1)
-    return b[:i],b[i:]
 
 # Cell
 @patch
@@ -97,10 +92,10 @@ def summary(self:Labeller, dl):
     metrics = self.metrics
     for metric in metrics: metric.reset()
     for b in dl:
-        xb,yb = map(detuplify, _split(dl, b))
+        xb,yb = split_batch(dl, b)
         for metric in metrics:
             if not isinstance(metric, ValidLabelMetric): metric.accumulate(xb); continue
             if yb is not None:                   metric.accumulate(xb,yb.view(-1,1)) # Safe to add dim in yb?
     if yb is None: metrics = metrics.filter(lambda o: not isinstance(o, ValidLabelMetric))
     data = dict(metrics.map(lambda o: (o.name, o.value)))
-    return pd.DataFrame(data, index=self.func_order)
+    return pd.DataFrame(data, index=self.lfs_order)

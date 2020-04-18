@@ -3,6 +3,7 @@
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
 index = {"instantiate": "00_core.ipynb",
+         "split_batch": "00_core.ipynb",
          "TfmdLists.__init__": "00_core.ipynb",
          "TfmdLists.cache": "00_core.ipynb",
          "TfmdLists.__getitem__": "00_core.ipynb",
@@ -13,6 +14,7 @@ index = {"instantiate": "00_core.ipynb",
          "subscribe": "00_core.ipynb",
          "UniqueList": "02_labeller.core.ipynb",
          "Labeller": "02_labeller.core.ipynb",
+         "Labeller.find": "02_labeller.core.ipynb",
          "tasks_labels": "02_labeller.core.ipynb",
          "LabelMetric": "02a_labeller.metrics.ipynb",
          "ValidLabelMetric": "02a_labeller.metrics.ipynb",

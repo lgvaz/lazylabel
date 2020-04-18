@@ -14,8 +14,8 @@ class UniqueList(L):
 
 # Cell
 class Labeller:
-    def __init__(self, abstain='abstain'):
-        self.func_order,self.abstain = UniqueList(),abstain
+    def __init__(self, vocab):
+        self.lfs_order,self.vocab = UniqueList(),CategoryMap(vocab)
         self.subs = L()
 
     def __call__(self, tfm):
@@ -23,8 +23,8 @@ class Labeller:
         return _inner
 
     def register_func(self, tfm, f):
-        self.func_order.clear()
-        sub = subscribe(tfm, self.func_order)
+        self.lfs_order.clear()
+        sub = subscribe(tfm, self.lfs_order)
         self.subs.append(sub)
         return sub(self._add_label(f))
 
@@ -34,7 +34,7 @@ class Labeller:
     def reset(self):
         for sub in self.subs: sub.cancel()
         self.subs.clear()
-        self.func_order.clear()
+        self.lfs_order.clear()
 
     def listen(self, v):
         for sub in self.subs: sub.listen = v
@@ -42,11 +42,33 @@ class Labeller:
     def _add_label(self, f):
         @wraps(f)
         def _inner(x):
-            label = ifnone(f(x), self.abstain)
+            label = f(x)
             x = add_attr(x, 'labels', [])
             x.labels.append(label)
             return x
         return _inner
+
+# Cell
+@patch
+def _find(self:Labeller, dl, lfs_idxs, lbl_idxs, reduction=operator.and_):
+    matches,total = [],0
+    old_shuffle, dl.shuffle = dl.shuffle, False
+    for b in dl:
+        xb,yb = split_batch(dl, b)
+        masks = [xb[:,i]==x for i,x in zip(lfs_idxs,lbl_idxs)]
+        mask = reduce(reduction, masks)
+        idxs = np.array(mask2idxs(mask))
+        matches.extend(idxs+total)
+        total += find_bs(xb)
+    dl.shuffle = old_shuffle
+    return matches
+
+# Cell
+@patch
+def find(self:Labeller, dl, lfs, lbls, reduction=operator.and_):
+    lfs_idxs = [self.lfs_order.index(lf) for lf in lfs]
+    lbl_idxs = [self.vocab.o2i[lbl] for lbl in lbls]
+    return self._find(dl, lfs_idxs, lbl_idxs, reduction)
 
 # Cell
 def tasks_labels(tls, vocab, splits=None, lazy=False):
