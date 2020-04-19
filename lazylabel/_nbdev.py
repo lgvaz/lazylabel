@@ -38,8 +38,8 @@ modules = ["core.py",
            "text/core.py",
            "text/labellers.py"]
 
-doc_url = "https://lgvaz.github.io/pigboat/"
+doc_url = "https://lgvaz.github.io/lazylabel/"
 
-git_url = "https://github.com/lgvaz/pigboat/tree/master/"
+git_url = "https://github.com/lgvaz/lazylabel/tree/master/"
 
 def custom_doc_links(name): return None
