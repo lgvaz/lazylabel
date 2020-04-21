@@ -28,7 +28,7 @@ _old_do_call = Transform._do_call
 def _do_call(self:Transform, f, x, **kwargs):
     res = _maintain_labels(x, _old_do_call(self, f, x, **kwargs))
     if f[type(x)] is not None: # Checks for type dispatch
-        self._pres = {k: v(x) for k,v in self.pre_broad.items()}
+        self._pres = {k: v(res) for k,v in self.pre_broad.items()}
         self.broadcast(res)
     return res
 
@@ -55,20 +55,6 @@ class Subscription:
     def cancel(self):
         self.cancel()
         self.sub = None
-
-# Cell
-# from functools import wraps
-# def subscription(f, cancel):
-#     sub = None
-#     def _cancel(): cancel(), subs.clear()
-#     f.cancel = _cancel
-#     f.listen_one = lambda o: sub =
-#     @wraps(f)
-#     def _inner(*args, **kwargs):
-#         for sub in subs: sub(f.__name__)
-#         subs.clear()
-#         return f(*args, **kwargs)
-#     return _inner
 
 # Cell
 @patch
