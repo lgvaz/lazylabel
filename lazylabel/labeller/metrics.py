@@ -29,7 +29,9 @@ class Coverage(LabelMetric):
         bcount = (xb!=0).sum(axis=0)
         self.count += bcount
     @property
-    def value(self): return (self.count.float()/self.total).tolist()
+    def value(self):
+        pcts = (100*self.count.float()/self.total).tolist()
+        return [f'{pct:.2f}% ({v})' for pct,v in zip(pcts,self.count)]
 
 # Cell
 class Polarity(LabelMetric):
