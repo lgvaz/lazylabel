@@ -84,8 +84,8 @@ defaults.labeller_metrics = [Coverage, Polarity, LabelAccuracy, CountCorrect, Co
 # Cell
 _old_labeller_init = Labeller.__init__
 @patch
-def __init__(self:Labeller, vocab, metrics=None):
-    _old_labeller_init(self, vocab)
+def __init__(self:Labeller, metrics=None):
+    _old_labeller_init(self)
     self.metrics = L(instantiate(o) for o in L(metrics)+L(defaults.labeller_metrics))
 
 # Cell
