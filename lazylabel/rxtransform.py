@@ -40,6 +40,9 @@ def broadcast(self:Transform, x):
 def listen(self:Transform, *pre):
     for o in pre: self.pre_broad[_hash_fn(o)] = o
     def _inner(f):
-        self.listeners[_hash_fn(f)] = (f, pre)
+        f_hash = _hash_fn(f)
+        self.listeners[f_hash] = (f, pre)
+        def cancel(): self.listeners.pop(f_hash)
+        f.cancel = cancel
         return f
     return _inner
