@@ -7,7 +7,9 @@ from fastai2.basics import *
 from .core import *
 
 # Cell
-def _maintain_labels(old, new): return add_attr(new, 'labels', getattr(old, 'labels', []))
+def _maintain_labels(old, new):
+    if isinstance(new, tuple): return new
+    return add_attr(new, 'labels', getattr(old, 'labels', []))
 
 # Cell
 def _hash_fn(o): return o.__name__
