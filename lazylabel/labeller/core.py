@@ -50,26 +50,19 @@ class Labeller:
 
 # Cell
 class Labeller:
-    def __init__(self):
-        self.subs = L()
+    def __init__(self): self.subs = L()
 
     def __call__(self, tfm):
         def _inner(f): return self.register_func(tfm, f)
         return _inner
 
     def register_func(self, tfm, f, *pre):
-        return tfm.listen(*pre)(self._add_label(f))
+        sub = tfm.listen(*pre)(self._add_label(f))
+        self.subs.append(sub)
+        return sub
 
     def register_funcs(self, tfm, fs):
         for f in L(fs): self.register_func(tfm, f)
-
-    def reset(self):
-        for sub in self.subs: sub.cancel()
-        self.subs.clear()
-        self.lfs_order.clear()
-
-    def listen(self, v):
-        for sub in self.subs: sub.listen = v
 
     def _add_label(self, f):
         @wraps(f)
@@ -93,9 +86,10 @@ def _find(self:Labeller, dl, lfs_idxs, lbl_idxs, reduction=operator.and_):
 
 # Cell
 @patch
-def find(self:Labeller, dl, lfs, lbls, reduction=operator.and_):
+def find(self:Labeller, dl, vocab, lfs, lbls, reduction=operator.and_):
+    vocab = CategoryMap(vocab)
     lfs_idxs = [self.lfs_order.index(lf) for lf in lfs]
-    lbl_idxs = [self.vocab.o2i[lbl] for lbl in lbls]
+    lbl_idxs = [vocab.o2i[lbl] for lbl in lbls]
     return self._find(dl, lfs_idxs, lbl_idxs, reduction)
 
 # Cell
