@@ -20,8 +20,8 @@ def split_batch(dl, b):
 _old_tfmdlists_init = TfmdLists.__init__
 @patch
 def __init__(self:TfmdLists, items, tfms, **kwargs):
-    _old_tfmdlists_init(self, items, tfms, **kwargs)
     self.cached = False
+    _old_tfmdlists_init(self, items, tfms, **kwargs)
 
 # Cell
 _old_tfmdlists_new = TfmdLists._new
@@ -58,6 +58,6 @@ def _get_proxy(x):
 # Cell
 def add_attr(obj, name, value):
     try:
-        setattr(obj, name, getattr(obj,'labels',value))
+        setattr(obj, name, getattr(obj,name,value))
         return obj
     except AttributeError: return add_attr(_get_proxy(obj), name, value)

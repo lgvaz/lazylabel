@@ -30,7 +30,10 @@ class Labeller:
 
     def _add_label(self, f):
         @wraps(f)
-        def _inner(x, *args, **kwargs): x.labels.append(f(x, *args, **kwargs))
+        def _inner(x, *args, **kwargs):
+            x = add_attr(x, 'labels', [])
+            x.labels.append(f(x, *args, **kwargs))
+            return x
         return _inner
 
 # Cell
@@ -48,9 +51,8 @@ def lfs_order(self:Labeller):
 # Cell
 @patch
 def remove(self:Labeller, name):
-    sub = self.subs[name]
+    sub = self.subs.pop(name)
     sub.cancel()
-    del sub
 
 # Cell
 @patch

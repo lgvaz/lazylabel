@@ -56,7 +56,7 @@ class CountCorrect(ValidLabelMetric):
     def reset(self): self.count = 0
     def accumulate(self, xb, yb): self.count += (xb==yb).sum(dim=0) # TODO: abstain
     @property
-    def value(self): return self.count
+    def value(self): return self.count.tolist()
     @property
     def name(self): return 'Correct'
 
@@ -74,7 +74,7 @@ class LabelAccuracy(ValidLabelMetric):
         self.total += (xb!=0).sum(dim=0) # TODO: abstain
         self.count += (xb==yb).sum(dim=0)
     @property
-    def value(self): return self.count.float()/self.total
+    def value(self): return (self.count.float()/self.total).tolist()
     @property
     def name(self): return 'Accuracy'
 

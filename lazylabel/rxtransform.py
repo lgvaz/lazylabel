@@ -8,8 +8,8 @@ from .core import *
 
 # Cell
 def _maintain_labels(old, new):
-    if isinstance(new, tuple): return new
-    return add_attr(new, 'labels', getattr(old, 'labels', []))
+    if hasattr(old, 'labels'): new = add_attr(new, 'labels', old.labels)
+    return new
 
 # Cell
 def _hash_fn(o): return o.__name__
@@ -29,13 +29,16 @@ def _do_call(self:Transform, f, x, **kwargs):
     res = _maintain_labels(x, _old_do_call(self, f, x, **kwargs))
     if f[type(x)] is not None: # Checks for type dispatch
         self._pres = {k: v(res) for k,v in self.pre_broad.items()}
-        self.broadcast(res)
+        res = self.broadcast(res)
     return res
 
 # Cell
 @patch
 def broadcast(self:Transform, x):
-    for f,pre in self.listeners.values(): f(x, *[self._pres[_hash_fn(o)] for o in pre])
+    for f,pre in self.listeners.values():
+        res = f(x, *[self._pres[_hash_fn(o)] for o in pre])
+        if res is not None: x = res
+    return x
 
 # Cell
 class Subscription:
