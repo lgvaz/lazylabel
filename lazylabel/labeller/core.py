@@ -84,8 +84,9 @@ def find(self:Labeller, dl, vocab, lfs, lbls, reduction=operator.and_):
     return self._find(dl, lfs_idxs, lbl_idxs, reduction)
 
 # Cell
-def tasks_labels(labeller, tls, vocab, splits=None, lazy=False):
+def tasks_labels(labeller, tls, vocab, lazy=False):
     labeller.listen_lfs_order()
-    tasks = TfmdLists(tls, [AttrGetter('labels'), MultiCategorize(vocab)], splits=splits)
+    tasks = tls._new(tls.items)
+    tasks.tfms = Pipeline([*tls.tfms.fs, AttrGetter('labels'), MultiCategorize(vocab)])
     if not lazy: tasks.cache()
     return tasks
